@@ -8,7 +8,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
     public class ObjectPooler : Singleton<ObjectPooler>
     {
         [SerializeField] private List<Pool> pools;
-        private Dictionary<PoolObjectType,Queue<GameObject>> _poolDictionary;
+        private Dictionary<string,Queue<GameObject>> _poolDictionary;
         
         private void Awake()
         {
@@ -17,7 +17,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
         
         private void Init()
         {
-            _poolDictionary = new Dictionary<PoolObjectType, Queue<GameObject>>();
+            _poolDictionary = new Dictionary<string, Queue<GameObject>>();
             
             foreach (var pool in pools)
             {
@@ -25,7 +25,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
             }
         }
         
-        private void CreatePoolObject(PoolObjectType type, int count = 1)
+        private void CreatePoolObject(string type, int count = 1)
         {
             var pool = pools.First(x => x.type == type);
             for (var i = 0; i < count; i++)
@@ -43,7 +43,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
             }
         }
         
-        public GameObject GetPoolObject(PoolObjectType type, bool isGetAsActive = true)
+        public GameObject GetPoolObject(string type, bool isGetAsActive = true)
         {
             if (!_poolDictionary.ContainsKey(type))
             {
@@ -72,22 +72,16 @@ namespace QubeesUtility.Runtime.QubeesUtility
     public class Pool
     {
         public string name;
-        public PoolObjectType type;
+        public string type;
         public Transform parent;
         public GameObject prefab;
         public IPoolable Poolable;
         public int size;
     }
 
-    public enum PoolObjectType
-    {
-        Orc,
-        Goblin
-    }
-
     public interface IPoolable
     {
-        public PoolObjectType PoolObjectType { get; }
+        public string PoolObjectType { get; }
         void OnGet();
         public void OnRelease();
     }
