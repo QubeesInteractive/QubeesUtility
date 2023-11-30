@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace qubees_utility.Runtime.QubeesUtility.Extensions
+namespace QubeesUtility.Runtime.QubeesUtility.Extensions
 {
     public static class TransformExtensions
     {
@@ -33,6 +33,14 @@ namespace qubees_utility.Runtime.QubeesUtility.Extensions
             var scale = t.localScale;
             scale.z = newScale;
             t.localScale = scale;
+        }
+
+        public static void DestroyChildren(this Transform t)
+        {
+            foreach (Transform child in t)
+            {
+                Object.Destroy(child.gameObject);
+            }
         }
     }
 }

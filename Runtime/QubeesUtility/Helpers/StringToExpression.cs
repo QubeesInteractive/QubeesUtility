@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.IO.LowLevel.Unsafe;
 
-namespace qubees_utility.Runtime.QubeesUtility.Helpers
+namespace QubeesUtility.Runtime.QubeesUtility.Helpers
 {
     public static class StringToExpression
     {

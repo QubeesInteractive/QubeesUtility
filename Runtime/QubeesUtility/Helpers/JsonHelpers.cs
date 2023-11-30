@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace qubees_utility.Runtime.QubeesUtility.Helpers
+namespace QubeesUtility.Runtime.QubeesUtility.Helpers
 {
     public static class JsonHelpers
     {

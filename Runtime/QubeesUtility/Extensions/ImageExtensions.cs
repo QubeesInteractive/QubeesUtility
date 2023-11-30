@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UI;
 
-namespace qubees_utility.Runtime.QubeesUtility.Extensions
+namespace QubeesUtility.Runtime.QubeesUtility.Extensions
 {
     public static class ImageExtensions
     {

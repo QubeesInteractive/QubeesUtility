@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using Vector2 = System.Numerics.Vector2;
-using Vector3 = System.Numerics.Vector3;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
-namespace qubees_utility.Runtime.QubeesUtility.Helpers
+namespace QubeesUtility.Runtime.QubeesUtility.Helpers
 {
     public class VectorHelpers
     {

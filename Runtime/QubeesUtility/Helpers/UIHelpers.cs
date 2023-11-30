@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace qubees_utility.Runtime.QubeesUtility.Helpers
+namespace QubeesUtility.Runtime.QubeesUtility.Helpers
 {
     public static class UIHelpers
     {

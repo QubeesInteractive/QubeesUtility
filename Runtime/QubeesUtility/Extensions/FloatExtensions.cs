@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace qubees_utility.Runtime.QubeesUtility.Extensions
+namespace QubeesUtility.Runtime.QubeesUtility.Extensions
 {
     public static class FloatExtensions
     {
