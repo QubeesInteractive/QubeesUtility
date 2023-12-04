@@ -32,7 +32,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
             {
                 var go = Instantiate(pool.prefab);
                 if (pool.parent)
-                    go.transform.SetParent(pool.parent);
+                    go.transform.SetParent(pool.parent, false);
                 go.SetActive(false);
                 if (!_poolDictionary.ContainsKey(type))
                 {
