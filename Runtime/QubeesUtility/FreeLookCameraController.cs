@@ -58,6 +58,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
         private void Awake()
         {
+            InitMovement();
             InitZoom();
             InitRotation();
         }
@@ -89,7 +90,13 @@ namespace QubeesUtility.Runtime.QubeesUtility
     
         private bool _moveCameraWithRightMouseButton;
         private Vector2 _lastMousePosition = Vector2.zero;
-        private Vector3 clampedValue;
+        // public Transform movementTarget;
+        public Vector3 movementTarget;
+        private void InitMovement()
+        {
+            movementTarget = cinemachineVirtualCamera.transform.position;
+        }
+        
         private void HandleMovementWithKeyboard()
         {
             Vector3 inputDirection = Vector3.zero;
@@ -98,18 +105,18 @@ namespace QubeesUtility.Runtime.QubeesUtility
             if (Input.GetKey(KeyCode.A)) inputDirection.x = -1f;
             if (Input.GetKey(KeyCode.D)) inputDirection.x = 1f;
 
-            if (inputDirection.magnitude < Mathf.Epsilon) return;
-        
+            // if (inputDirection.magnitude < Mathf.Epsilon) return;
+            
             Vector3 moveDirection = transform.forward * inputDirection.z
                                     + transform.right * inputDirection.x;
 
             moveDirection.y = 0;
              
-             clampedValue = transform.position + moveDirection.normalized * (moveSpeed * Time.deltaTime);
-            clampedValue.x = Mathf.Clamp(clampedValue.x, movementClampX.x, movementClampX.y);
-            clampedValue.z = Mathf.Clamp(clampedValue.z, movementClampZ.x, movementClampZ.y);
+            movementTarget += moveDirection.normalized * (moveSpeed * Time.deltaTime);
+            movementTarget.x = Mathf.Clamp(movementTarget.x, movementClampX.x, movementClampX.y);
+            movementTarget.z = Mathf.Clamp(movementTarget.z, movementClampZ.x, movementClampZ.y);
         
-            transform.position = Vector3.Lerp(transform.position, clampedValue, moveLerp * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, movementTarget, moveLerp * Time.deltaTime);
         }
 
         private void HandleMovementWithEdgeScrolling()
