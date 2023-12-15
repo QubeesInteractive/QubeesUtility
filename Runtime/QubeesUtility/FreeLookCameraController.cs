@@ -1,5 +1,6 @@
 using Cinemachine;
 using NaughtyAttributes;
+using QubeesUtility.Runtime.QubeesUtility.Extensions;
 using UnityEngine;
 
 namespace QubeesUtility.Runtime.QubeesUtility
@@ -8,7 +9,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
     {
         FOV,
         MoveForward,
-        LowerY,
+        LowerY
     }
 
     public class FreeLookCameraController : MonoBehaviour
@@ -114,6 +115,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
              
             movementTarget += moveDirection.normalized * (moveSpeed * Time.deltaTime);
             movementTarget.x = Mathf.Clamp(movementTarget.x, movementClampX.x, movementClampX.y);
+            movementTarget.y = transform.position.y;
             movementTarget.z = Mathf.Clamp(movementTarget.z, movementClampZ.x, movementClampZ.y);
         
             transform.position = Vector3.Lerp(transform.position, movementTarget, moveLerp * Time.deltaTime);
@@ -182,8 +184,8 @@ namespace QubeesUtility.Runtime.QubeesUtility
         #endregion
 
         #region Zoom
-    
-        private Vector3 _followOffset;
+
+        private Vector3 _followOffset = Vector3.zero;
         private float _targetFov;
         private Vector3 _zoomTarget;
         private float _moveForwardZoomAmount;
@@ -194,6 +196,9 @@ namespace QubeesUtility.Runtime.QubeesUtility
             //     .GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset;
             _targetFov = cinemachineVirtualCamera.m_Lens.FieldOfView;
             _zoomTarget = transform.position;
+            _followOffset.y = transform.position.y;
+            cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = _followOffset;
+            transform.SetYPosition(0);
         }
     
         private void HandleCameraZoom_FOV()

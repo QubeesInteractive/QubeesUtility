@@ -4,6 +4,21 @@ namespace QubeesUtility.Runtime.QubeesUtility.Extensions
 {
     public static class TransformExtensions
     {
+        public static void SetXPosition(this Transform t, float newPosition) {
+            var pos = t.position;
+            pos.x = newPosition;
+            t.position = pos;
+        }    
+        public static void SetYPosition(this Transform t, float newPosition) {
+            var pos = t.position;
+            pos.y = newPosition;
+            t.position = pos;
+        }    
+        public static void SetZPosition(this Transform t, float newPosition) {
+            var pos = t.position;
+            pos.z = newPosition;
+            t.position = pos;
+        }    
         public static void SetLocalXPosition(this Transform t, float newPosition) {
             var pos = t.localPosition;
             pos.x = newPosition;
