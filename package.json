@@ -1,6 +1,6 @@
 {
   "name": "com.qubeesinteractive.qubeesutility",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "displayName": "Qubees Utilities",
   "description": "This is a mini utilities library with common necessaries for any genre game",
   "unity": "2021.1",

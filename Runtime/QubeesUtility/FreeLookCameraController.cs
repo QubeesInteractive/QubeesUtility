@@ -113,12 +113,12 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
             moveDirection.y = 0;
              
-            movementTarget += moveDirection.normalized * (moveSpeed * Time.deltaTime);
+            movementTarget += moveDirection.normalized * (moveSpeed * Time.unscaledDeltaTime);
             movementTarget.x = Mathf.Clamp(movementTarget.x, movementClampX.x, movementClampX.y);
             movementTarget.y = transform.position.y;
             movementTarget.z = Mathf.Clamp(movementTarget.z, movementClampZ.x, movementClampZ.y);
         
-            transform.position = Vector3.Lerp(transform.position, movementTarget, moveLerp * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, movementTarget, moveLerp * Time.unscaledDeltaTime);
         }
 
         private void HandleMovementWithEdgeScrolling()
@@ -137,7 +137,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
         
             moveDirection.y = 0;
             
-            Vector3 clampedValue = transform.position + moveDirection.normalized * (moveSpeed * Time.deltaTime);
+            Vector3 clampedValue = transform.position + moveDirection.normalized * (moveSpeed * Time.unscaledDeltaTime);
             clampedValue.x = Mathf.Clamp(clampedValue.x, movementClampX.x, movementClampX.y);
             clampedValue.z = Mathf.Clamp(clampedValue.z, movementClampZ.x, movementClampZ.y);
         
@@ -174,11 +174,11 @@ namespace QubeesUtility.Runtime.QubeesUtility
         
             moveDirection.y = 0;
             
-            Vector3 clampedValue = transform.position + moveDirection.normalized * (moveSpeed * Time.deltaTime);
+            Vector3 clampedValue = transform.position + moveDirection.normalized * (moveSpeed * Time.unscaledDeltaTime);
             clampedValue.x = Mathf.Clamp(clampedValue.x, movementClampX.x, movementClampX.y);
             clampedValue.z = Mathf.Clamp(clampedValue.z, movementClampZ.x, movementClampZ.y);
         
-            transform.position = Vector3.Lerp(transform.position, clampedValue, moveLerp * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, clampedValue, moveLerp * Time.unscaledDeltaTime);
         }
     
         #endregion
@@ -217,7 +217,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
             cinemachineVirtualCamera.m_Lens.FieldOfView = Mathf.Lerp(
                 cinemachineVirtualCamera.m_Lens.FieldOfView,
                 _targetFov,
-                Time.deltaTime * zoomLerpSpeed);
+                Time.unscaledDeltaTime * zoomLerpSpeed);
         }
 
         private void HandleCameraZoom_MoveForward()
@@ -252,7 +252,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
                     cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset,
                     // transform.position,
                     _zoomTarget,
-                    zoomLerpSpeed * Time.deltaTime);
+                    zoomLerpSpeed * Time.unscaledDeltaTime);
         }
  
         private void HandleCameraZoom_LowerY() 
@@ -272,7 +272,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
                 = Vector3.Lerp(
                     cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset,
                     _followOffset,
-                    zoomLerpSpeed * Time.deltaTime);
+                    zoomLerpSpeed * Time.unscaledDeltaTime);
         }
 
         #endregion
@@ -300,7 +300,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
             if (Input.GetKey(KeyCode.Q)) rotateDir = 1f;
             if (Input.GetKey(KeyCode.E)) rotateDir = -1f;
 
-            transform.eulerAngles += new Vector3(0, rotateDir * rotateWithKeyboardSpeed * Time.deltaTime, 0);
+            transform.eulerAngles += new Vector3(0, rotateDir * rotateWithKeyboardSpeed * Time.unscaledDeltaTime, 0);
         }
 
         private void HandleRotationWithMouseButton()
@@ -309,8 +309,8 @@ namespace QubeesUtility.Runtime.QubeesUtility
                 _pitch = Mathf.Clamp(_pitch + Input.GetAxis("Mouse Y") * -rotateWithMouseButtonSpeed, rotateUpClamp, 89);
                 _yaw -= Input.GetAxis("Mouse X") * -rotateWithMouseButtonSpeed;
             }
-            _appliedYaw = Mathf.Lerp(_appliedYaw, _yaw, Time.deltaTime * rotateLerp);
-            _appliedPitch = Mathf.Lerp(_appliedPitch, _pitch, Time.deltaTime * rotateLerp);
+            _appliedYaw = Mathf.Lerp(_appliedYaw, _yaw, Time.unscaledDeltaTime * rotateLerp);
+            _appliedPitch = Mathf.Lerp(_appliedPitch, _pitch, Time.unscaledDeltaTime * rotateLerp);
             transform.eulerAngles = new Vector3(_appliedPitch, _appliedYaw, 0f);
 
         }
