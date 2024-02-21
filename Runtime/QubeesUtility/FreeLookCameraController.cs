@@ -28,13 +28,9 @@ namespace QubeesUtility.Runtime.QubeesUtility
         [SerializeField] private float moveLerp = 50f;
 
         [Header("Rotate")]
-        [SerializeField] private bool rotateWithKeyboard;
-        [ShowIf("rotateWithKeyboard")]
         [SerializeField] private float rotateWithKeyboardSpeed = 120f;
-        [SerializeField] private bool rotateWithMouseButton;
-        [ShowIf("rotateWithMouseButton")]
         [SerializeField] private float rotateWithMouseButtonSpeed = 2f;
-        [Range(-89,89)]
+        [Range(-89, 89)]
         [SerializeField] private float rotateUpClamp = 45f;
         [SerializeField] private float rotateLerp = 10f;
 
@@ -46,7 +42,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
         [SerializeField] private float fovMin;
         [ShowIf("zoomType", ZoomType.FOV)]
         [SerializeField] private float fovMax;
-    
+
         [ShowIf("zoomType", ZoomType.MoveForward)]
         [SerializeField] private float followOffsetMin;
         [ShowIf("zoomType", ZoomType.MoveForward)]
@@ -63,16 +59,16 @@ namespace QubeesUtility.Runtime.QubeesUtility
             InitZoom();
             InitRotation();
         }
-    
+
         private void Update()
         {
             if (useKeyboardMovement) HandleMovementWithKeyboard();
             if (useMoveCameraWithRightMouseButton) HandleMovementWithRightClick();
             if (useEdgeScrolling) HandleMovementWithEdgeScrolling();
-        
-            if (rotateWithKeyboard) HandleRotationWithKeyboard();
-            if (rotateWithMouseButton) HandleRotationWithMouseButton();
-
+            
+            HandleRotationWithKeyboard();
+            HandleRotationWithMouseButton();
+            
             switch (zoomType)
             {
                 case ZoomType.FOV:
@@ -88,7 +84,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
         }
 
         #region Movement
-    
+
         private bool _moveCameraWithRightMouseButton;
         private Vector2 _lastMousePosition = Vector2.zero;
         // public Transform movementTarget;
@@ -97,7 +93,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
         {
             movementTarget = cinemachineVirtualCamera.transform.position;
         }
-        
+
         private void HandleMovementWithKeyboard()
         {
             Vector3 inputDirection = Vector3.zero;
@@ -107,40 +103,40 @@ namespace QubeesUtility.Runtime.QubeesUtility
             if (Input.GetKey(KeyCode.D)) inputDirection.x = 1f;
 
             // if (inputDirection.magnitude < Mathf.Epsilon) return;
-            
+
             Vector3 moveDirection = transform.forward * inputDirection.z
                                     + transform.right * inputDirection.x;
 
             moveDirection.y = 0;
-             
+
             movementTarget += moveDirection.normalized * (moveSpeed * Time.unscaledDeltaTime);
             movementTarget.x = Mathf.Clamp(movementTarget.x, movementClampX.x, movementClampX.y);
             movementTarget.y = transform.position.y;
             movementTarget.z = Mathf.Clamp(movementTarget.z, movementClampZ.x, movementClampZ.y);
-        
+
             transform.position = Vector3.Lerp(transform.position, movementTarget, moveLerp * Time.unscaledDeltaTime);
         }
 
         private void HandleMovementWithEdgeScrolling()
         {
             Vector3 inputDirection = Vector3.zero;
-        
+
             if (Input.mousePosition.x < edgeScrollSize) inputDirection.x = -1f;
             if (Input.mousePosition.y < edgeScrollSize) inputDirection.z = -1f;
             if (Input.mousePosition.x > Screen.width - edgeScrollSize) inputDirection.x = 1f;
             if (Input.mousePosition.y > Screen.height - edgeScrollSize) inputDirection.z = 1f;
-        
+
             if (inputDirection.magnitude < Mathf.Epsilon) return;
 
             Vector3 moveDirection = transform.forward * inputDirection.z
                                     + transform.right * inputDirection.x;
-        
+
             moveDirection.y = 0;
-            
+
             Vector3 clampedValue = transform.position + moveDirection.normalized * (moveSpeed * Time.unscaledDeltaTime);
             clampedValue.x = Mathf.Clamp(clampedValue.x, movementClampX.x, movementClampX.y);
             clampedValue.z = Mathf.Clamp(clampedValue.z, movementClampZ.x, movementClampZ.y);
-        
+
             transform.position = clampedValue;
             // transform.position = Vector3.Lerp(transform.position, clampedValue, moveLerp * Time.deltaTime);
         }
@@ -166,21 +162,21 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
                 _lastMousePosition = Input.mousePosition;
             }
-        
+
             if (inputDirection.magnitude < Mathf.Epsilon) return;
 
             Vector3 moveDirection = transform.forward * inputDirection.z
                                     + transform.right * inputDirection.x;
-        
+
             moveDirection.y = 0;
-            
+
             Vector3 clampedValue = transform.position + moveDirection.normalized * (moveSpeed * Time.unscaledDeltaTime);
             clampedValue.x = Mathf.Clamp(clampedValue.x, movementClampX.x, movementClampX.y);
             clampedValue.z = Mathf.Clamp(clampedValue.z, movementClampZ.x, movementClampZ.y);
-        
+
             transform.position = Vector3.Lerp(transform.position, clampedValue, moveLerp * Time.unscaledDeltaTime);
         }
-    
+
         #endregion
 
         #region Zoom
@@ -200,7 +196,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
             cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = _followOffset;
             transform.SetYPosition(0);
         }
-    
+
         private void HandleCameraZoom_FOV()
         {
             if (Input.mouseScrollDelta.y < 0)
@@ -223,17 +219,17 @@ namespace QubeesUtility.Runtime.QubeesUtility
         private void HandleCameraZoom_MoveForward()
         {
             Vector3 zoomDir = transform.forward.normalized;
-            
+
             if (Input.mouseScrollDelta.y < 0)
             {
                 // _zoomTargetPosition -= zoomDir * zoomAmount;
-                _moveForwardZoomAmount -=  zoomAmount;
+                _moveForwardZoomAmount -= zoomAmount;
             }
 
             if (Input.mouseScrollDelta.y > 0)
             {
                 // _zoomTargetPosition += zoomDir * zoomAmount;
-                _moveForwardZoomAmount +=  zoomAmount;
+                _moveForwardZoomAmount += zoomAmount;
             }
             _zoomTarget = zoomDir * _moveForwardZoomAmount;
             _zoomTarget.x = 0;
@@ -247,26 +243,26 @@ namespace QubeesUtility.Runtime.QubeesUtility
             // }
 
             cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset
-            // transform.position
+                // transform.position
                 = Vector3.Lerp(
                     cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset,
                     // transform.position,
                     _zoomTarget,
                     zoomLerpSpeed * Time.unscaledDeltaTime);
         }
- 
-        private void HandleCameraZoom_LowerY() 
+
+        private void HandleCameraZoom_LowerY()
         {
             if (Input.mouseScrollDelta.y < 0)
             {
                 _followOffset.y += zoomAmount;
             }
-            
+
             if (Input.mouseScrollDelta.y > 0)
             {
                 _followOffset.y -= zoomAmount;
             }
-            
+
             _followOffset.y = Mathf.Clamp(_followOffset.y, followOffsetMinY, followOffsetMaxY);
             cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset
                 = Vector3.Lerp(
@@ -285,35 +281,49 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
         private float _appliedYaw;
         private float _appliedPitch;
-        
+
+        private bool _isRotatingWithMouseButton;
+        private bool _isRotatingWithKeyboard;
+
         private void InitRotation()
         {
             _pitch = transform.eulerAngles.x;
             _yaw = transform.eulerAngles.y;
-            
+
             _appliedPitch = _pitch;
             _appliedYaw = _yaw;
         }
         private void HandleRotationWithKeyboard()
         {
+            if (_isRotatingWithMouseButton) return;
             float rotateDir = 0f;
-            if (Input.GetKey(KeyCode.Q)) rotateDir = 1f;
-            if (Input.GetKey(KeyCode.E)) rotateDir = -1f;
+            if (Input.GetKey(KeyCode.Q)) rotateDir = -1f;
+            if (Input.GetKey(KeyCode.E)) rotateDir = 1f;
+            _isRotatingWithKeyboard = Mathf.Abs(rotateDir) > 0f;
+            if (_isRotatingWithKeyboard)
+            {
+                transform.eulerAngles += new Vector3(0, rotateDir * rotateWithKeyboardSpeed * Time.unscaledDeltaTime, 0);
+                _yaw = transform.eulerAngles.y;
+                _appliedYaw = _yaw;
 
-            transform.eulerAngles += new Vector3(0, rotateDir * rotateWithKeyboardSpeed * Time.unscaledDeltaTime, 0);
+            }
         }
 
         private void HandleRotationWithMouseButton()
         {
-            if(Input.GetMouseButton(2)) {
+            if (_isRotatingWithKeyboard) return;
+            _isRotatingWithMouseButton = Input.GetMouseButton(2);
+            if (_isRotatingWithMouseButton)
+            {
                 _pitch = Mathf.Clamp(_pitch + Input.GetAxis("Mouse Y") * -rotateWithMouseButtonSpeed, rotateUpClamp, 89);
                 _yaw -= Input.GetAxis("Mouse X") * -rotateWithMouseButtonSpeed;
             }
+
             _appliedYaw = Mathf.Lerp(_appliedYaw, _yaw, Time.unscaledDeltaTime * rotateLerp);
             _appliedPitch = Mathf.Lerp(_appliedPitch, _pitch, Time.unscaledDeltaTime * rotateLerp);
             transform.eulerAngles = new Vector3(_appliedPitch, _appliedYaw, 0f);
-
         }
+
         #endregion
 
     }
