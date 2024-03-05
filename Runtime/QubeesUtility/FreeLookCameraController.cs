@@ -92,14 +92,28 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
         public void CanMove(bool status)
         {
+            if (!status)
+            {
+                movementTarget = transform.position;
+            }
             _canMove = status;
-        }  
+        }
         public void CanRotate(bool status)
         {
+            if (!status)
+            {
+                _appliedYaw = _yaw;
+                _appliedPitch = _pitch;
+                transform.eulerAngles = new Vector3(_appliedPitch, _appliedYaw, 0f);
+            }
             _canRotate = status;
-        }  
+        }
         public void CanZoom(bool status)
         {
+            if (!status)
+            {
+                cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = _followOffset;
+            }
             _canZoom = status;
         }
         #region Movement
