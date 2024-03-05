@@ -253,6 +253,15 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
         private void HandleCameraZoom_LowerY()
         {
+            #if (ENABLE_LEGACY_INPUT_MANAGER)
+            Debug.Log("INPUT_Manager");
+#elif (ENABLE_INPUT_SYSTEM)
+        Debug.Log("INPUT_System");
+#elif (ENABLE_INPUT_SYSTEM && ENABLE_LEGACY_INPUT_MANAGER)
+        Debug.Log("INPUT_System");
+#else
+        Debug.Log("INPUT_Manager");
+#endif
             if (Input.mouseScrollDelta.y < 0)
             {
                 _followOffset.y += zoomAmount;
