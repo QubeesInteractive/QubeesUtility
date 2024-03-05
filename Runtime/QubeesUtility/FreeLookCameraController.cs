@@ -43,16 +43,14 @@ namespace QubeesUtility.Runtime.QubeesUtility
         [ShowIf("zoomType", ZoomType.FOV)]
         [SerializeField] private float fovMax;
 
-        [ShowIf("zoomType", ZoomType.MoveForward)]
-        [SerializeField] private float followOffsetMin;
-        [ShowIf("zoomType", ZoomType.MoveForward)]
-        [SerializeField] private float followOffsetMax;
         [ShowIf("zoomType", ZoomType.LowerY)]
         [SerializeField] private float followOffsetMinY;
         [ShowIf("zoomType", ZoomType.LowerY)]
         [SerializeField] private float followOffsetMaxY;
 
-
+        private bool _canMove = true;
+        private bool _canRotate = true;
+        private bool _canZoom = true;
         private void Awake()
         {
             InitMovement();
@@ -62,32 +60,52 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
         private void Update()
         {
-            if (useKeyboardMovement) HandleMovementWithKeyboard();
-            if (useMoveCameraWithRightMouseButton) HandleMovementWithRightClick();
-            if (useEdgeScrolling) HandleMovementWithEdgeScrolling();
-            
-            HandleRotationWithKeyboard();
-            HandleRotationWithMouseButton();
-            
-            switch (zoomType)
+            if (_canMove)
             {
-                case ZoomType.FOV:
-                    HandleCameraZoom_FOV();
-                    break;
-                case ZoomType.MoveForward:
-                    HandleCameraZoom_MoveForward();
-                    break;
-                case ZoomType.LowerY:
-                    HandleCameraZoom_LowerY();
-                    break;
+                if (useKeyboardMovement) HandleMovementWithKeyboard();
+                if (useMoveCameraWithRightMouseButton) HandleMovementWithRightClick();
+                if (useEdgeScrolling) HandleMovementWithEdgeScrolling();
+            }
+
+            if (_canRotate)
+            {
+                HandleRotationWithKeyboard();
+                HandleRotationWithMouseButton();
+            }
+
+            if (_canZoom)
+            {
+                switch (zoomType)
+                {
+                    case ZoomType.FOV:
+                        HandleCameraZoom_FOV();
+                        break;
+                    case ZoomType.MoveForward:
+                        HandleCameraZoom_MoveForward();
+                        break;
+                    case ZoomType.LowerY:
+                        HandleCameraZoom_LowerY();
+                        break;
+                }
             }
         }
 
+        public void CanMove(bool status)
+        {
+            _canMove = status;
+        }  
+        public void CanRotate(bool status)
+        {
+            _canRotate = status;
+        }  
+        public void CanZoom(bool status)
+        {
+            _canZoom = status;
+        }
         #region Movement
 
         private bool _moveCameraWithRightMouseButton;
         private Vector2 _lastMousePosition = Vector2.zero;
-        // public Transform movementTarget;
         public Vector3 movementTarget;
         private void InitMovement()
         {
@@ -101,8 +119,6 @@ namespace QubeesUtility.Runtime.QubeesUtility
             if (Input.GetKey(KeyCode.S)) inputDirection.z = -1f;
             if (Input.GetKey(KeyCode.A)) inputDirection.x = -1f;
             if (Input.GetKey(KeyCode.D)) inputDirection.x = 1f;
-
-            // if (inputDirection.magnitude < Mathf.Epsilon) return;
 
             Vector3 moveDirection = transform.forward * inputDirection.z
                                     + transform.right * inputDirection.x;
@@ -138,7 +154,6 @@ namespace QubeesUtility.Runtime.QubeesUtility
             clampedValue.z = Mathf.Clamp(clampedValue.z, movementClampZ.x, movementClampZ.y);
 
             transform.position = clampedValue;
-            // transform.position = Vector3.Lerp(transform.position, clampedValue, moveLerp * Time.deltaTime);
         }
 
         private void HandleMovementWithRightClick()
@@ -188,8 +203,6 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
         private void InitZoom()
         {
-            // _followOffset = cinemachineVirtualCamera
-            //     .GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset;
             _targetFov = cinemachineVirtualCamera.m_Lens.FieldOfView;
             _zoomTarget = transform.position;
             _followOffset.y = transform.position.y;
@@ -222,46 +235,25 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
             if (Input.mouseScrollDelta.y < 0)
             {
-                // _zoomTargetPosition -= zoomDir * zoomAmount;
                 _moveForwardZoomAmount -= zoomAmount;
             }
 
             if (Input.mouseScrollDelta.y > 0)
             {
-                // _zoomTargetPosition += zoomDir * zoomAmount;
                 _moveForwardZoomAmount += zoomAmount;
             }
             _zoomTarget = zoomDir * _moveForwardZoomAmount;
             _zoomTarget.x = 0;
-            // if (_followOffset.magnitude < followOffsetMin)
-            // {
-            //     _followOffset = zoomDir * followOffsetMin;
-            // }
-            // if (_followOffset.magnitude > followOffsetMax)
-            // {
-            //     _followOffset = zoomDir * followOffsetMax;
-            // }
 
             cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset
-                // transform.position
                 = Vector3.Lerp(
                     cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset,
-                    // transform.position,
                     _zoomTarget,
                     zoomLerpSpeed * Time.unscaledDeltaTime);
         }
 
         private void HandleCameraZoom_LowerY()
         {
-            #if (ENABLE_LEGACY_INPUT_MANAGER)
-            Debug.Log("INPUT_Manager");
-#elif (ENABLE_INPUT_SYSTEM)
-        Debug.Log("INPUT_System");
-#elif (ENABLE_INPUT_SYSTEM && ENABLE_LEGACY_INPUT_MANAGER)
-        Debug.Log("INPUT_System");
-#else
-        Debug.Log("INPUT_Manager");
-#endif
             if (Input.mouseScrollDelta.y < 0)
             {
                 _followOffset.y += zoomAmount;
