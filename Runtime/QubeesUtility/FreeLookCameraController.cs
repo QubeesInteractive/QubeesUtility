@@ -17,8 +17,8 @@ namespace QubeesUtility.Runtime.QubeesUtility
         [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
 
         [Header("Movement")]
-        [SerializeField] private Vector2 movementClampX;
-        [SerializeField] private Vector2 movementClampZ;
+        [SerializeField] public Vector2 movementClampX;
+        [SerializeField] public Vector2 movementClampZ;
         [SerializeField] private bool useKeyboardMovement = true;
         [SerializeField] private bool useMoveCameraWithRightMouseButton;
         [SerializeField] private bool useEdgeScrolling;
