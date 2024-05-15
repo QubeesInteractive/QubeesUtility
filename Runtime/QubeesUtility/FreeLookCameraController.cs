@@ -49,7 +49,8 @@ namespace QubeesUtility.Runtime.QubeesUtility
         [SerializeField] private float followOffsetMaxY;
 
         private bool _canMove = true;
-        private bool _canRotate = true;
+        private bool _canRotateWithKeyboard = true;
+        private bool _canRotateWithMouse = true;
         private bool _canZoom = true;
         private void Awake()
         {
@@ -67,9 +68,13 @@ namespace QubeesUtility.Runtime.QubeesUtility
                 if (useEdgeScrolling) HandleMovementWithEdgeScrolling();
             }
 
-            if (_canRotate)
+            if (_canRotateWithKeyboard)
             {
                 HandleRotationWithKeyboard();
+            }
+
+            if (_canRotateWithMouse)
+            {
                 HandleRotationWithMouseButton();
             }
 
@@ -98,15 +103,16 @@ namespace QubeesUtility.Runtime.QubeesUtility
             }
             _canMove = status;
         }
-        public void CanRotate(bool status)
+        public void CanRotate(bool keyboardStatus, bool mouseStatus)
         {
-            if (!status)
+            if (!keyboardStatus && !mouseStatus)
             {
                 _appliedYaw = _yaw;
                 _appliedPitch = _pitch;
                 transform.eulerAngles = new Vector3(_appliedPitch, _appliedYaw, 0f);
             }
-            _canRotate = status;
+            _canRotateWithKeyboard = keyboardStatus;
+            _canRotateWithMouse = mouseStatus;
         }
         public void CanZoom(bool status)
         {
