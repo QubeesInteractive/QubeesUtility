@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using Cinemachine;
 using NaughtyAttributes;
 using QubeesUtility.Runtime.QubeesUtility.Extensions;
@@ -16,47 +18,50 @@ namespace QubeesUtility.Runtime.QubeesUtility
     {
         [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
 
-        [Header("Movement")]
-        [SerializeField] public Vector2 movementClampX;
+        [Header("Movement")] [SerializeField] public Vector2 movementClampX;
         [SerializeField] public Vector2 movementClampZ;
         [SerializeField] private bool useKeyboardMovement = true;
         [SerializeField] private bool useMoveCameraWithRightMouseButton;
         [SerializeField] private bool useEdgeScrolling;
-        [ShowIf("useEdgeScrolling")]
-        [SerializeField] private float edgeScrollSize = 30f;
+
+        [ShowIf("useEdgeScrolling")] [SerializeField]
+        private float edgeScrollSize = 30f;
+
         [SerializeField] private float moveSpeed = 100f;
         [SerializeField] private float moveLerp = 50f;
 
-        [Header("Rotate")]
-        [SerializeField] private float rotateWithKeyboardSpeed = 120f;
+        [Header("Rotate")] [SerializeField] private float rotateWithKeyboardSpeed = 120f;
         [SerializeField] private float rotateWithMouseButtonSpeed = 2f;
-        [Range(-89, 89)]
-        [SerializeField] private float rotateUpClamp = 45f;
+        [Range(-89, 89)] [SerializeField] private float rotateUpClamp = 45f;
         [SerializeField] private float rotateLerp = 10f;
 
-        [Header("Zoom")]
-        [SerializeField] private float zoomAmount;
+        [Header("Zoom")] [SerializeField] private float zoomAmount;
         [SerializeField] private float zoomLerpSpeed;
         [SerializeField] private ZoomType zoomType;
-        [ShowIf("zoomType", ZoomType.FOV)]
-        [SerializeField] private float fovMin;
-        [ShowIf("zoomType", ZoomType.FOV)]
-        [SerializeField] private float fovMax;
 
-        [ShowIf("zoomType", ZoomType.LowerY)]
-        [SerializeField] private float followOffsetMinY;
-        [ShowIf("zoomType", ZoomType.LowerY)]
-        [SerializeField] private float followOffsetMaxY;
+        [ShowIf("zoomType", ZoomType.FOV)] [SerializeField]
+        private float fovMin;
+
+        [ShowIf("zoomType", ZoomType.FOV)] [SerializeField]
+        private float fovMax;
+
+        [ShowIf("zoomType", ZoomType.LowerY)] [SerializeField]
+        private float followOffsetMinY;
+
+        [ShowIf("zoomType", ZoomType.LowerY)] [SerializeField]
+        private float followOffsetMaxY;
 
         private bool _canMove = true;
         private bool _canRotateWithKeyboard = true;
         private bool _canRotateWithMouse = true;
         private bool _canZoom = true;
+
         private void Awake()
         {
             InitMovement();
             InitZoom();
             InitRotation();
+            InitShake();
         }
 
         private void Update()
@@ -101,8 +106,10 @@ namespace QubeesUtility.Runtime.QubeesUtility
             {
                 movementTarget = transform.position;
             }
+
             _canMove = status;
         }
+
         public void CanRotate(bool keyboardStatus, bool mouseStatus)
         {
             if (!keyboardStatus && !mouseStatus)
@@ -111,22 +118,28 @@ namespace QubeesUtility.Runtime.QubeesUtility
                 _appliedPitch = _pitch;
                 transform.eulerAngles = new Vector3(_appliedPitch, _appliedYaw, 0f);
             }
+
             _canRotateWithKeyboard = keyboardStatus;
             _canRotateWithMouse = mouseStatus;
         }
+
         public void CanZoom(bool status)
         {
             if (!status)
             {
-                cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = _followOffset;
+                cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset =
+                    _followOffset;
             }
+
             _canZoom = status;
         }
+
         #region Movement
 
         private bool _moveCameraWithRightMouseButton;
         private Vector2 _lastMousePosition = Vector2.zero;
         public Vector3 movementTarget;
+
         private void InitMovement()
         {
             movementTarget = cinemachineVirtualCamera.transform.position;
@@ -185,10 +198,12 @@ namespace QubeesUtility.Runtime.QubeesUtility
                 _moveCameraWithRightMouseButton = true;
                 _lastMousePosition = Input.mousePosition;
             }
+
             if (Input.GetMouseButtonUp(1))
             {
                 _moveCameraWithRightMouseButton = false;
             }
+
             if (_moveCameraWithRightMouseButton)
             {
                 Vector2 mouseMovementDelta = (Vector2)Input.mousePosition - _lastMousePosition;
@@ -236,6 +251,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
             {
                 _targetFov += zoomAmount;
             }
+
             if (Input.mouseScrollDelta.y > 0)
             {
                 _targetFov -= zoomAmount;
@@ -262,6 +278,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
             {
                 _moveForwardZoomAmount += zoomAmount;
             }
+
             _zoomTarget = zoomDir * _moveForwardZoomAmount;
             _zoomTarget.x = 0;
 
@@ -314,6 +331,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
             _appliedPitch = _pitch;
             _appliedYaw = _yaw;
         }
+
         private void HandleRotationWithKeyboard()
         {
             if (_isRotatingWithMouseButton) return;
@@ -323,10 +341,10 @@ namespace QubeesUtility.Runtime.QubeesUtility
             _isRotatingWithKeyboard = Mathf.Abs(rotateDir) > 0f;
             if (_isRotatingWithKeyboard)
             {
-                transform.eulerAngles += new Vector3(0, rotateDir * rotateWithKeyboardSpeed * Time.unscaledDeltaTime, 0);
+                transform.eulerAngles +=
+                    new Vector3(0, rotateDir * rotateWithKeyboardSpeed * Time.unscaledDeltaTime, 0);
                 _yaw = transform.eulerAngles.y;
                 _appliedYaw = _yaw;
-
             }
         }
 
@@ -336,7 +354,8 @@ namespace QubeesUtility.Runtime.QubeesUtility
             _isRotatingWithMouseButton = Input.GetMouseButton(2);
             if (_isRotatingWithMouseButton)
             {
-                _pitch = Mathf.Clamp(_pitch + Input.GetAxis("Mouse Y") * -rotateWithMouseButtonSpeed, rotateUpClamp, 89);
+                _pitch = Mathf.Clamp(_pitch + Input.GetAxis("Mouse Y") * -rotateWithMouseButtonSpeed, rotateUpClamp,
+                    89);
                 _yaw -= Input.GetAxis("Mouse X") * -rotateWithMouseButtonSpeed;
             }
 
@@ -347,5 +366,42 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
         #endregion
 
+        #region Shake
+
+        private float _shakeTimer;
+        private bool _isShakeCameraActive;
+
+        private void InitShake()
+        {
+            var cinemachineBasicMultiChannelPerlin = cinemachineVirtualCamera
+                .GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            if (cinemachineBasicMultiChannelPerlin)
+            {
+                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0;
+                cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
+            }
+        }
+        [Button]
+        public void ShakeCamera(float intensity = 1, float frequency = 1, float time = 1)
+        {
+            StartCoroutine(ShakeRoutine());
+
+            IEnumerator ShakeRoutine()
+            {
+                if (_isShakeCameraActive) yield break;
+
+                _isShakeCameraActive = true;
+                var cinemachineBasicMultiChannelPerlin = cinemachineVirtualCamera
+                    .GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = intensity;
+                cinemachineBasicMultiChannelPerlin.m_FrequencyGain = frequency;
+                yield return new WaitForSeconds(time);
+                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0;
+                cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
+                _isShakeCameraActive = false;
+            }
+        }
+
+        #endregion
     }
 }
