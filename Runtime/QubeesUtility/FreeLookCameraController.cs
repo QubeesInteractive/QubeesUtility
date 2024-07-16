@@ -145,6 +145,11 @@ namespace QubeesUtility.Runtime.QubeesUtility
             movementTarget = cinemachineVirtualCamera.transform.position;
         }
 
+        public void SetMoveTarget(Vector3 target)
+        {
+            movementTarget = target.With(y: transform.position.y);
+        }
+
         private void HandleMovementWithKeyboard()
         {
             Vector3 inputDirection = Vector3.zero;
@@ -381,6 +386,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
                 cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
             }
         }
+
         [Button]
         public void ShakeCamera(float intensity = 1, float frequency = 1, float time = 1)
         {
