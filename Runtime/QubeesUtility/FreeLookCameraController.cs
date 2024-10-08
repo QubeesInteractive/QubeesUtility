@@ -20,41 +20,41 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
         [Header("Movement")] [SerializeField] public Vector2 movementClampX;
         [SerializeField] public Vector2 movementClampZ;
-        [SerializeField] private bool useKeyboardMovement = true;
-        [SerializeField] private bool useMoveCameraWithRightMouseButton;
-        [SerializeField] private bool useEdgeScrolling;
+        [SerializeField] public bool useKeyboardMovement = true;
+        [SerializeField] public bool useMoveCameraWithRightMouseButton;
+        [SerializeField] public bool useEdgeScrolling;
 
         [ShowIf("useEdgeScrolling")] [SerializeField]
-        private float edgeScrollSize = 30f;
+        public float edgeScrollSize = 30f;
 
-        [SerializeField] private float moveSpeed = 100f;
-        [SerializeField] private float moveLerp = 50f;
+        [SerializeField] public float moveSpeed = 100f;
+        [SerializeField] public float moveLerp = 50f;
 
-        [Header("Rotate")] [SerializeField] private float rotateWithKeyboardSpeed = 120f;
-        [SerializeField] private float rotateWithMouseButtonSpeed = 2f;
-        [Range(-89, 89)] [SerializeField] private float rotateUpClamp = 45f;
-        [SerializeField] private float rotateLerp = 10f;
+        [Header("Rotate")] [SerializeField] public float rotateWithKeyboardSpeed = 120f;
+        [SerializeField] public float rotateWithMouseButtonSpeed = 2f;
+        [Range(-89, 89)] [SerializeField] public float rotateUpClamp = 45f;
+        [SerializeField] public float rotateLerp = 10f;
 
-        [Header("Zoom")] [SerializeField] private float zoomAmount;
-        [SerializeField] private float zoomLerpSpeed;
-        [SerializeField] private ZoomType zoomType;
-
-        [ShowIf("zoomType", ZoomType.FOV)] [SerializeField]
-        private float fovMin;
+        [Header("Zoom")] [SerializeField] public float zoomAmount;
+        [SerializeField] public float zoomLerpSpeed;
+        [SerializeField] public ZoomType zoomType;
 
         [ShowIf("zoomType", ZoomType.FOV)] [SerializeField]
-        private float fovMax;
+        public float fovMin;
+
+        [ShowIf("zoomType", ZoomType.FOV)] [SerializeField]
+        public float fovMax;
 
         [ShowIf("zoomType", ZoomType.LowerY)] [SerializeField]
-        private float followOffsetMinY;
+        public float followOffsetMinY;
 
         [ShowIf("zoomType", ZoomType.LowerY)] [SerializeField]
-        private float followOffsetMaxY;
+        public float followOffsetMaxY;
 
-        private bool _canMove = true;
-        private bool _canRotateWithKeyboard = true;
-        private bool _canRotateWithMouse = true;
-        private bool _canZoom = true;
+        public bool _canMove = true;
+        public bool _canRotateWithKeyboard = true;
+        public bool _canRotateWithMouse = true;
+        public bool _canZoom = true;
 
         private void Awake()
         {
@@ -236,10 +236,10 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
         #region Zoom
 
-        private Vector3 _followOffset = Vector3.zero;
-        private float _targetFov;
-        private Vector3 _zoomTarget;
-        private float _moveForwardZoomAmount;
+        public Vector3 _followOffset = Vector3.zero;
+        public float _targetFov;
+        public Vector3 _zoomTarget;
+        public float _moveForwardZoomAmount;
 
         private void InitZoom()
         {
@@ -318,15 +318,15 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
         #region Rotation
 
-        private bool _rotateCameraWithRightMouseButton;
-        private float _yaw;
-        private float _pitch;
+        public bool _rotateCameraWithRightMouseButton;
+        public float _yaw;
+        public float _pitch;
 
-        private float _appliedYaw;
-        private float _appliedPitch;
+        public float _appliedYaw;
+        public float _appliedPitch;
 
-        private bool _isRotatingWithMouseButton;
-        private bool _isRotatingWithKeyboard;
+        public bool _isRotatingWithMouseButton;
+        public bool _isRotatingWithKeyboard;
 
         private void InitRotation()
         {
@@ -373,10 +373,10 @@ namespace QubeesUtility.Runtime.QubeesUtility
 
         #region Shake
 
-        private float _shakeTimer;
-        private bool _isShakeCameraActive;
+        public float _shakeTimer;
+        public bool _isShakeCameraActive;
 
-        private void InitShake()
+        public void InitShake()
         {
             var cinemachineBasicMultiChannelPerlin = cinemachineVirtualCamera
                 .GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
