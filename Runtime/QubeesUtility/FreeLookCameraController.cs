@@ -1,8 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using Cinemachine;
 using NaughtyAttributes;
 using QubeesUtility.Runtime.QubeesUtility.Extensions;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace QubeesUtility.Runtime.QubeesUtility
@@ -382,8 +381,8 @@ namespace QubeesUtility.Runtime.QubeesUtility
                 .GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
             if (cinemachineBasicMultiChannelPerlin)
             {
-                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0;
-                cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
+                cinemachineBasicMultiChannelPerlin.AmplitudeGain = 0;
+                cinemachineBasicMultiChannelPerlin.FrequencyGain = 0;
             }
         }
 
@@ -399,11 +398,11 @@ namespace QubeesUtility.Runtime.QubeesUtility
                 _isShakeCameraActive = true;
                 var cinemachineBasicMultiChannelPerlin = cinemachineVirtualCamera
                     .GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = intensity;
-                cinemachineBasicMultiChannelPerlin.m_FrequencyGain = frequency;
+                cinemachineBasicMultiChannelPerlin.AmplitudeGain = intensity;
+                cinemachineBasicMultiChannelPerlin.FrequencyGain = frequency;
                 yield return new WaitForSeconds(time);
-                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0;
-                cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
+                cinemachineBasicMultiChannelPerlin.AmplitudeGain = 0;
+                cinemachineBasicMultiChannelPerlin.FrequencyGain = 0;
                 _isShakeCameraActive = false;
             }
         }
