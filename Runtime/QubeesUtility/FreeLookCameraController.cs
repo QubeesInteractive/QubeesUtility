@@ -50,6 +50,8 @@ namespace QubeesUtility.Runtime.QubeesUtility
         [ShowIf("zoomType", ZoomType.LowerY)] [SerializeField]
         public float followOffsetMaxY;
 
+        public bool isPitchActive = true;
+
         public bool _canMove = true;
         public bool _canRotateWithKeyboard = true;
         public bool _canRotateWithMouse = true;
@@ -358,8 +360,10 @@ namespace QubeesUtility.Runtime.QubeesUtility
             _isRotatingWithMouseButton = Input.GetMouseButton(2);
             if (_isRotatingWithMouseButton)
             {
-                _pitch = Mathf.Clamp(_pitch + Input.GetAxis("Mouse Y") * -rotateWithMouseButtonSpeed, rotateUpClamp,
-                    89);
+                if (isPitchActive)
+                {
+                    _pitch = Mathf.Clamp(_pitch + Input.GetAxis("Mouse Y") * -rotateWithMouseButtonSpeed, rotateUpClamp,89);
+                }
                 _yaw -= Input.GetAxis("Mouse X") * -rotateWithMouseButtonSpeed;
             }
 
