@@ -17,7 +17,7 @@ namespace QubeesUtility.Runtime.QubeesUtility
         
         private void Init()
         {
-            _poolDictionary = new Dictionary<string, Queue<GameObject>>();
+            _poolDictionary = new Dictionary<string, Queue<GameObject>>(StringComparer.Ordinal);
             
             foreach (var pool in pools)
             {
